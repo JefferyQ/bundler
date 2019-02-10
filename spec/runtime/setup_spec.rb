@@ -16,7 +16,7 @@ RSpec.describe "Bundler.setup" do
         require 'rack'
         puts RACK
       RUBY
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to eq("1.0.0")
     end
   end
@@ -42,7 +42,7 @@ RSpec.describe "Bundler.setup" do
           puts "WIN"
         end
       RUBY
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to eq("WIN")
     end
 
@@ -55,7 +55,7 @@ RSpec.describe "Bundler.setup" do
         require 'rack'
         puts RACK
       RUBY
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to eq("1.0.0")
     end
 
@@ -69,7 +69,7 @@ RSpec.describe "Bundler.setup" do
         require 'rack'
         puts RACK
       RUBY
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to eq("1.0.0")
     end
 
@@ -87,7 +87,7 @@ RSpec.describe "Bundler.setup" do
           puts "FAIL"
         end
       RUBY
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to match("WIN")
     end
 
@@ -101,8 +101,8 @@ RSpec.describe "Bundler.setup" do
         puts "FAIL"
       RUBY
 
-      expect(err).to match("rack")
-      expect(err).to match("LoadError")
+      expect(last_command.stderr).to match("rack")
+      expect(last_command.stderr).to match("LoadError")
       expect(out).not_to match("FAIL")
     end
   end
@@ -138,7 +138,7 @@ RSpec.describe "Bundler.setup" do
       load_path = out.split("\n")
       rack_load_order = load_path.index {|path| path.include?("rack") }
 
-      expect(err).to eq("")
+      expect(last_command.stderr).to eq("")
       expect(load_path[1]).to include "dash_i_dir"
       expect(load_path[2]).to include "rubylib_dir"
       expect(rack_load_order).to be > 0
@@ -362,7 +362,7 @@ RSpec.describe "Bundler.setup" do
           end
         R
 
-        expect(err).to be_empty
+        expect(last_command.stderr).to be_empty
       end
 
       it "replaces #gem but raises when the version is wrong" do
@@ -388,7 +388,7 @@ RSpec.describe "Bundler.setup" do
           end
         R
 
-        expect(err).to be_empty
+        expect(last_command.stderr).to be_empty
       end
     end
 
@@ -447,7 +447,7 @@ RSpec.describe "Bundler.setup" do
 
     it "provides a useful exception when the git repo is not checked out yet" do
       run "1"
-      expect(err).to match(/the git source #{lib_path('rack-1.0.0')} is not yet checked out. Please run `bundle install`/i)
+      expect(last_command.stderr).to match(/the git source #{lib_path('rack-1.0.0')} is not yet checked out. Please run `bundle install`/i)
     end
 
     it "does not hit the git binary if the lockfile is available and up to date" do
@@ -533,7 +533,7 @@ RSpec.describe "Bundler.setup" do
 
       FileUtils.rm_rf(lib_path("local-rack"))
       run "require 'rack'"
-      expect(err).to match(/Cannot use local override for rack-0.8 because #{Regexp.escape(lib_path('local-rack').to_s)} does not exist/)
+      expect(last_command.stderr).to match(/Cannot use local override for rack-0.8 because #{Regexp.escape(lib_path('local-rack').to_s)} does not exist/)
     end
 
     it "explodes if branch is not given on runtime" do
@@ -555,7 +555,7 @@ RSpec.describe "Bundler.setup" do
       G
 
       run "require 'rack'"
-      expect(err).to match(/because :branch is not specified in Gemfile/)
+      expect(last_command.stderr).to match(/because :branch is not specified in Gemfile/)
     end
 
     it "explodes on different branches on runtime" do
@@ -577,7 +577,7 @@ RSpec.describe "Bundler.setup" do
       G
 
       run "require 'rack'"
-      expect(err).to match(/is using branch master but Gemfile specifies changed/)
+      expect(last_command.stderr).to match(/is using branch master but Gemfile specifies changed/)
     end
 
     it "explodes on refs with different branches on runtime" do
@@ -597,7 +597,7 @@ RSpec.describe "Bundler.setup" do
 
       bundle %(config local.rack #{lib_path("local-rack")})
       run "require 'rack'"
-      expect(err).to match(/is using branch master but Gemfile specifies nonexistant/)
+      expect(last_command.stderr).to match(/is using branch master but Gemfile specifies nonexistant/)
     end
   end
 
@@ -702,7 +702,7 @@ RSpec.describe "Bundler.setup" do
           end
         R
 
-        expect(err).to be_empty
+        expect(last_command.stderr).to be_empty
       end
     end
   end
@@ -765,7 +765,7 @@ end
     ENV["GEM_HOME"] = ""
     bundle %(exec ruby -e "require 'set'"), :env => { :RUBYOPT => "-r#{spec_dir.join("support/hax")}" }
 
-    expect(err).to be_empty
+    expect(last_command.stderr).to be_empty
   end
 
   describe "$MANPATH" do
@@ -934,7 +934,7 @@ end
           require 'foo'
         R
       end
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
     end
 
     it "should make sure the Bundler.root is really included in the path relative to the Gemfile" do
@@ -959,7 +959,7 @@ end
         R
       end
 
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
     end
   end
 
@@ -1109,7 +1109,7 @@ end
         Bundler.load
       RUBY
 
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
       expect(out).to eq("")
     end
   end
@@ -1121,7 +1121,7 @@ end
       G
 
       bundle %(exec ruby -e "require 'bundler'; Bundler.setup"), :env => { :RUBYOPT => "-r#{spec_dir.join("support/hax")}" }
-      expect(err).to be_empty
+      expect(last_command.stderr).to be_empty
     end
   end
 
