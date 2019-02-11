@@ -157,7 +157,7 @@ RSpec.describe "bundle show" do
 
     it "does not output git errors" do
       bundle :show
-      expect(last_command.stderr).to be_empty
+      expect(last_command.stderr.split("\n").reject {|l| l =~ /DEPRECATED/ }).to be_empty
     end
   end
 
